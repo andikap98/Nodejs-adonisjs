@@ -19,7 +19,15 @@
 */
 
 import Route from '@ioc:Adonis/Core/Route'
+import { Group } from '@japa/runner'
+import BooksController from 'App/Controllers/Http/BooksController'
+import CategoriesController from 'App/Controllers/Http/CategoriesController'
 
 Route.get('/', async () => {
   return { hello: 'world' }
 })
+
+Route.group(() =>{
+  Route.resource('/kategori', 'CategoriesController').apiOnly
+  Route.resource('/buku', 'BooksController').apiOnly
+}).prefix('/api/v1')
