@@ -57,11 +57,58 @@ export default class BooksController {
     }
   }
 
-  public async show({}: HttpContextContract) {}
+  public async show({response, params}: HttpContextContract) {
+    const findBook= await Book.findOrFail(params.id)
+
+    return response.ok({
+      message: "Berikut Buku yang anda cari",
+      data: findBook
+    })
+  }
 
   public async edit({}: HttpContextContract) {}
 
-  public async update({}: HttpContextContract) {}
+  public async update({request, response, params}: HttpContextContract) {
 
-  public async destroy({}: HttpContextContract) {}
+    const BooksValidator = schema.create({
+      judul: schema.string(),
+      ringkasan: schema.string(),
+      tahun_terbit: schema.string(),
+      halaman: schema.number(),
+      category_id: schema.number([
+        rules.exists({ table: 'categories', column: 'id'}),
+      ])
+    })
+
+    try {
+      
+      const UpdateNewBook = await request.validate({
+        schema: BooksValidator
+      })
+
+      await Book
+        .query()
+        .where('id', params.id)
+        .update(UpdateNewBook)
+      
+      return response.created({
+        message: "Berhasil Merubah Data"
+      })
+
+    } catch (error) {
+      return response.status(404).send({
+        message: 'Books not found'
+      })
+    }
+  }
+
+  public async destroy({response, params}: HttpContextContract) {
+
+    const deleteBook = await Book.findOrFail(params.id)
+    await deleteBook.delete()
+
+    return response.ok({
+      message: "Behasil Menghapus Data"
+    })
+  }
 }
