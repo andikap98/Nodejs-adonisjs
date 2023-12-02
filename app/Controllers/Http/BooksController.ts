@@ -24,7 +24,7 @@ export default class BooksController {
 
   public async create({}: HttpContextContract) {}
 
-  public async store({request, response, params}: HttpContextContract) {
+  public async store({request, response}: HttpContextContract) {
     
     const BooksValidator = schema.create({
       judul: schema.string(),

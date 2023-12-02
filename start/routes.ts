@@ -31,3 +31,10 @@ Route.group(() =>{
   Route.resource('/kategori', 'CategoriesController').apiOnly
   Route.resource('/buku', 'BooksController').apiOnly
 }).prefix('/api/v1')
+
+
+// auth
+Route.group(()=>{
+  Route.post('/register', 'AuthController.register')
+  Route.post('/login', 'AuthController.login')
+}).prefix('/api/v1/auth')
